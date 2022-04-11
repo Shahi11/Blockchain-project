@@ -1,70 +1,99 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
-import getWeb3 from "./getWeb3";
-
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
-
-  componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
-
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
-    }
+  runExample = async () => {
+    // Register Seller
+    // Add component
+    // const response = await contract.methods
+    //   .addWorkoutPackage(
+    //     "a",
+    //     "Lean",
+    //     "Low-carb",
+    //     "pushups:10,benchpress:10",
+    //     10
+    //   )
+    //   .send({ from: accounts[0], value: 2 });
+    // console.log(response);
+    // Register buyer
+    // const response = await contract.methods
+    //   .registerUser(1)
+    //   .send({ from: accounts[0], value: 100 });
+    // console.log(response);
+    // Transfer ownership (Buy component)
+    // const response = await contract.methods
+    //   .ownershipTransfer("a")
+    //   .send({ from: accounts[0], value: 2 });
+    // console.log(response);
+    // // Get the value from the contract to prove it worked.
+    // const response = await contract.methods.getOwner("a").call();
+    // console.log(response);
+    // // Update state with the result.
+    // this.setState({ storageValue: response });
   };
 
-  runExample = async () => {
-    const { accounts, contract } = this.state;
+  submit = async () => {
+    const { accounts, contract } = this.props;
 
-    // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
+    const memberType = parseInt(
+      document.querySelector('input[name="memberType"]:checked').value
+    );
 
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
+    const name = document.querySelector("#name").value;
 
-    // Update state with the result.
-    this.setState({ storageValue: response });
+    console.log(accounts);
+    const response = await contract.methods
+      .registerUser(memberType, name)
+      .send({
+        from: accounts[0],
+        value: parseInt(document.querySelector("#escrow").value),
+      });
+    console.log(accounts);
+    console.log(response);
+
+    window.location.href = "/dashboard";
   };
 
   render() {
-    if (!this.state.web3) {
+    console.log(this.props);
+    if (!this.props.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 42</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+        <h1>SANKALP</h1>
+        <p>Fit Body dwells fit mind and soul</p>
+        <form class="search-wrapper cf">
+          <p>Your MetaMask Account will be used for registration </p>
+          <br />
+          <input
+            id="name"
+            className="textInput"
+            type="text"
+            placeholder="Enter Name"
+          />
+          <br />
+          <input
+            id="escrow"
+            className="textInput"
+            type="text"
+            placeholder="Enter Initial amount for your Account"
+          />
+          <br />
+            <input
+            type="radio"
+            id="Trainer"
+            name="memberType"
+            value="1"
+          />  <label>Trainer</label>
+            <input type="radio" id="Member" name="memberType" value="2" /> {" "}
+          <label>Member</label>
+          <br />
+          <br />
+          <button type="button" onClick={this.submit}>
+            Get Started
+          </button>
+        </form>
       </div>
     );
   }
