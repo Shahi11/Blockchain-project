@@ -54,8 +54,21 @@ const AddWorkout = ({ contract, accounts, web3 }) => {
 
   return (
     <div className="App">
-      <h1>SANKALP</h1>
-      <p>Fit Body dwells fit mind and soul</p>
+      <div className="header">
+        <div className="header-start">
+          <h1>SANKALP</h1>
+          <p>Fit Body dwells fit mind and soul</p>
+        </div>
+        <div className="header-end">
+          <button
+            onClick={() => {
+              window.location.href = "/dashboard";
+            }}
+          >
+            Go to Dashboard
+          </button>
+        </div>
+      </div>
       <form class="search-wrapper cf">
         <p>Welcome Trainer! Please add your workout package</p>
         <br />

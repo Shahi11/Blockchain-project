@@ -26,6 +26,7 @@ contract Sankalp {
         uint  sellCost;
         uint rentCost;
         uint UserRating;
+        bool deleted;
     }
 
    mapping(address => user) users;
@@ -79,14 +80,14 @@ contract Sankalp {
         require(bytes(reps).length > 0, "Reps needed to register workout");
         require(bytes(bodyType).length > 0, "Body Type needed to register workout");
         owners[uid] = msg.sender;
-        workoutPackageMapping[uid] = workoutPackage(uid, packageName,description,bodyType, diet, reps, sellCost, rentCost, users[msg.sender].rating);
+        workoutPackageMapping[uid] = workoutPackage(uid, packageName,description,bodyType, diet, reps, sellCost, rentCost, users[msg.sender].rating, false);
 
-        listOfWorkouts.push(workoutPackage(uid, packageName,description, bodyType, diet, reps, sellCost, rentCost,users[msg.sender].rating));
+        listOfWorkouts.push(workoutPackage(uid, packageName,description, bodyType, diet, reps, sellCost, rentCost,users[msg.sender].rating, false));
     }
 
     function modifyRating(uint rating, string memory uid) public isEligible(2){
         users[owners[uid]].supscriptionCount += 1;
-        users[owners[uid]].rating = (users[owners[uid]].rating + rating)/users[owners[uid]].supscriptionCount;
+        users[owners[uid]].rating = rating;
 
         workoutPackageMapping[uid].UserRating = users[owners[uid]].rating;
             for (uint i = 0; i < listOfWorkouts.length; i ++ ){
@@ -110,12 +111,12 @@ contract Sankalp {
         
              emit Transfer(msg.sender, seller, workoutPackageMapping[uid].sellCost);
 
-            for (uint i = 0; i < listOfWorkouts.length; i ++ ){
-                if (keccak256(bytes(listOfWorkouts[i].uid)) == keccak256(bytes(uid))){
-                delete listOfWorkouts[i];
-                break;
-            }
-          } 
+        //     for (uint i = 0; i < listOfWorkouts.length; i ++ ){
+        //         if (keccak256(bytes(listOfWorkouts[i].uid)) == keccak256(bytes(uid))){
+        //         delete listOfWorkouts[i];
+        //         break;
+        //     }
+        //   } 
         }
 
         else{

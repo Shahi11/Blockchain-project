@@ -1,3 +1,8 @@
+.ownerDetails {
+  margin-top: 20px;
+  color: white;
+}
+
 .container {
   display: flex;
   justify-content: center;
@@ -9,7 +14,7 @@
 
 .container .card {
   position: relative;
-  min-width: 320px;
+  min-width: 450px;
   height: 440px;
   box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2),
     inset -5px -5px 15px rgba(255, 255, 255, 0.1),
@@ -105,4 +110,228 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
   background: #fff;
   color: #000;
+}
+
+/* MODAL CSS */
+
+.modal-visible {
+  display: block;
+}
+.modal-hidden {
+  display: none;
+}
+
+/* The Modal (background) */
+.modal {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Modal */
+
+ol.gradient-list {
+  counter-reset: gradient-counter;
+  list-style: none;
+  margin: 1.75rem 0;
+  padding-left: 1rem;
+}
+ol.gradient-list li {
+  background: white;
+  border-radius: 0 0.5rem 0.5rem 0.5rem;
+  counter-increment: gradient-counter;
+  margin-top: 1rem;
+  min-height: 3rem;
+  padding: 1rem 1rem 1rem 3rem;
+  position: relative;
+}
+ol.gradient-list li::before,
+ol.gradient-list li::after {
+  background: linear-gradient(135deg, #83e4e2 0%, #a2ed56 100%);
+  border-radius: 1rem 1rem 0 1rem;
+  content: "";
+  height: 3rem;
+  left: -1rem;
+  overflow: hidden;
+  position: absolute;
+  top: -1rem;
+  width: 3rem;
+}
+ol.gradient-list li::before {
+  align-items: flex-end;
+  content: counter(gradient-counter);
+  color: #1d1f20;
+  display: flex;
+  font: 900 1.5em/1 "Montserrat";
+  justify-content: flex-end;
+  padding: 0.125em 0.25em;
+  z-index: 1;
+}
+ol.gradient-list li:nth-child(10n + 1):before {
+  background: linear-gradient(
+    135deg,
+    rgba(162, 237, 86, 0.2) 0%,
+    rgba(253, 220, 50, 0.2) 100%
+  );
+}
+ol.gradient-list li:nth-child(10n + 2):before {
+  background: linear-gradient(
+    135deg,
+    rgba(162, 237, 86, 0.4) 0%,
+    rgba(253, 220, 50, 0.4) 100%
+  );
+}
+ol.gradient-list li:nth-child(10n + 3):before {
+  background: linear-gradient(
+    135deg,
+    rgba(162, 237, 86, 0.6) 0%,
+    rgba(253, 220, 50, 0.6) 100%
+  );
+}
+ol.gradient-list li:nth-child(10n + 4):before {
+  background: linear-gradient(
+    135deg,
+    rgba(162, 237, 86, 0.8) 0%,
+    rgba(253, 220, 50, 0.8) 100%
+  );
+}
+ol.gradient-list li:nth-child(10n + 5):before {
+  background: linear-gradient(135deg, #a2ed56 0%, #fddc32 100%);
+}
+ol.gradient-list li:nth-child(10n + 6):before {
+  background: linear-gradient(
+    135deg,
+    rgba(162, 237, 86, 0.8) 0%,
+    rgba(253, 220, 50, 0.8) 100%
+  );
+}
+ol.gradient-list li:nth-child(10n + 7):before {
+  background: linear-gradient(
+    135deg,
+    rgba(162, 237, 86, 0.6) 0%,
+    rgba(253, 220, 50, 0.6) 100%
+  );
+}
+ol.gradient-list li:nth-child(10n + 8):before {
+  background: linear-gradient(
+    135deg,
+    rgba(162, 237, 86, 0.4) 0%,
+    rgba(253, 220, 50, 0.4) 100%
+  );
+}
+ol.gradient-list li:nth-child(10n + 9):before {
+  background: linear-gradient(
+    135deg,
+    rgba(162, 237, 86, 0.2) 0%,
+    rgba(253, 220, 50, 0.2) 100%
+  );
+}
+ol.gradient-list li:nth-child(10n + 10):before {
+  background: linear-gradient(
+    135deg,
+    rgba(162, 237, 86, 0) 0%,
+    rgba(253, 220, 50, 0) 100%
+  );
+}
+ol.gradient-list li + li {
+  margin-top: 2rem;
+}
+
+/* Rating */
+
+.rating-css {
+  height: 250px;
+  width: 400px;
+  padding: 20px;
+}
+.rating-css div {
+  color: #ffe400;
+  font-size: 20px;
+  font-family: sans-serif;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 10px 0;
+}
+.rating-css input {
+  display: none;
+}
+.rating-css input + label {
+  font-size: 60px;
+  text-shadow: 1px 1px 0 #ffe400;
+  cursor: pointer;
+}
+.rating-css input:checked + label ~ label {
+  color: #838383;
+}
+.rating-css label:active {
+  transform: scale(0.8);
+  transition: 0.3s ease;
+}
+
+.checked {
+  color: orange;
+}
+
+.dashboard-header-parent {
+  padding: 10px;
+}
+
+.dashboard-header-parent > h1 {
+  display: flex;
+  margin: 0px !important;
+  margin-bottom: 10px !important;
+}
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+}
+
+.dashboard-header > h2 {
+  display: flex;
+  justify-content: flex-start;
+}
+.dashboard-header > h3 {
+  display: flex;
+  text-align: left !important;
+}
+.dashboard-header > button {
+  height: 40px;
+}
+
+.mplace-header {
+  margin: 0px !important;
+  margin-bottom: 10px !important;
 }
