@@ -2,35 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 
 class App extends Component {
-  runExample = async () => {
-    // Register Seller
-    // Add component
-    // const response = await contract.methods
-    //   .addWorkoutPackage(
-    //     "a",
-    //     "Lean",
-    //     "Low-carb",
-    //     "pushups:10,benchpress:10",
-    //     10
-    //   )
-    //   .send({ from: accounts[0], value: 2 });
-    // console.log(response);
-    // Register buyer
-    // const response = await contract.methods
-    //   .registerUser(1)
-    //   .send({ from: accounts[0], value: 100 });
-    // console.log(response);
-    // Transfer ownership (Buy component)
-    // const response = await contract.methods
-    //   .ownershipTransfer("a")
-    //   .send({ from: accounts[0], value: 2 });
-    // console.log(response);
-    // // Get the value from the contract to prove it worked.
-    // const response = await contract.methods.getOwner("a").call();
-    // console.log(response);
-    // // Update state with the result.
-    // this.setState({ storageValue: response });
-  };
+  runExample = async () => {};
 
   submit = async () => {
     const { accounts, contract } = this.props;
@@ -46,7 +18,7 @@ class App extends Component {
       .registerUser(memberType, name)
       .send({
         from: accounts[0],
-        value: parseInt(document.querySelector("#escrow").value),
+        // gasLimit: 6000000,
       });
     console.log(accounts);
     console.log(response);
@@ -89,12 +61,7 @@ class App extends Component {
             placeholder="Enter Name"
           />
           <br />
-          <input
-            id="escrow"
-            className="textInput"
-            type="text"
-            placeholder="Enter Initial amount for your Account"
-          />
+          <p>You will get free 250 fitcoin upon registration</p>
           <br />
             <input
             type="radio"

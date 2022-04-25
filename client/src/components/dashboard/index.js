@@ -12,6 +12,8 @@ const Dashboard = ({ contract, accounts, web3 }) => {
   const [ownerDetails, setOwnerDetails] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [itemDetails, setItemDetails] = useState(null);
+  const [userBalance, setUserBalance] = useState(null);
+  const [isOwner, setIsOwner] = useState(null);
 
   const getListofWorkout = async () => {
     const listWorkout = await contract.methods.getAllWorkouts().call({
@@ -63,6 +65,22 @@ const Dashboard = ({ contract, accounts, web3 }) => {
     getListofWorkout();
   };
 
+  const getBalance = async () => {
+    const response = await contract.methods.getBalance().call({
+      from: accounts[0],
+    });
+    setUserBalance(response);
+    console.log("balance" + response);
+  };
+
+  const checkAdmin = async () => {
+    const response = await contract.methods.checkOwner().call({
+      from: accounts[0],
+    });
+    setIsOwner(response);
+    console.log("IsOwner" + response);
+  };
+
   const getOwner = async (uuid) => {
     if (ownerDetails) {
       setOwnerDetails(null);
@@ -71,17 +89,22 @@ const Dashboard = ({ contract, accounts, web3 }) => {
     const response = await contract.methods.getOwner(uuid).call({
       from: accounts[0],
     });
-
     setOwnerDetails(response);
-
     console.log(response);
-    // const response1 = await contract.methods.getAllWorkouts().call({
-    //   from: accounts[0],
-    // });
-    // setListOfWorkout(response1);
-    // console.log(response);
+  };
 
-    // window.location.href = "/dashboard";
+  const airdrop = async () => {
+    const amount = parseInt(document.querySelector("#amount").value);
+
+    const address = document.querySelector("#address").value;
+    console.log(amount, address);
+    console.log(accounts);
+    const response = await contract.methods.airDrop(address, amount).send({
+      from: accounts[0],
+    });
+    console.log(response);
+
+    window.location.href = "/dashboard";
   };
 
   useEffect(() => {
@@ -89,6 +112,8 @@ const Dashboard = ({ contract, accounts, web3 }) => {
     if (contract) {
       getUser();
       getListofWorkout();
+      getBalance();
+      checkAdmin();
     }
   }, [contract]);
 
@@ -119,7 +144,7 @@ const Dashboard = ({ contract, accounts, web3 }) => {
               <div>
                 {" "}
                 <h2>Welcome {userDetails[0]}</h2>
-                <h3>Balance: {userDetails[1]} Wei</h3>
+                <h3>Balance: {userBalance} fitcoin</h3>
               </div>
               {userDetails[2] == "1" && (
                 <button
@@ -135,6 +160,29 @@ const Dashboard = ({ contract, accounts, web3 }) => {
           </div>
         )}
       </div>
+      <div>
+        {isOwner && (
+          <form>
+            <h4>AIRDROP</h4>
+            <input
+              id="address"
+              className="textInput"
+              type="text"
+              placeholder="Enter Address"
+            />
+            <input
+              id="amount"
+              className="textInput"
+              type="number"
+              placeholder="Enter Amount"
+            />
+            <button type="button" onClick={airdrop}>
+              Send
+            </button>
+          </form>
+        )}
+      </div>
+      <br />
       <h1 className="mplace-header">MarketPlace</h1>
       <hr />
       <div className="container">
@@ -153,11 +201,11 @@ const Dashboard = ({ contract, accounts, web3 }) => {
                       onClick={() => submit(item, false)}
                       style={{ marginRight: "20px" }}
                     >
-                      Subscribe | {item[7]} Wei
+                      Subscribe | {item[7]} fitcoin
                     </a>
 
                     <a href="#" onClick={() => submit(item, true)}>
-                      Buy | {item[6]} Wei
+                      Buy | {item[6]} fitcoin
                     </a>
                     <a href="#" onClick={() => getOwner(item[0])}>
                       {ownerDetails ? "Hide Owner Info" : "Show Owner Info"}
@@ -204,11 +252,11 @@ const Dashboard = ({ contract, accounts, web3 }) => {
           {itemDetails && (
             <div>
               <ol class="gradient-list">
-                <li>ID : {itemDetails[1]}</li>
-                <li>Name : {itemDetails[2]}</li>
-                <li>Description : {itemDetails[3]}</li>
-                <li>BodyType : {itemDetails[4]}</li>
-                <li>Diet : {itemDetails[5]}</li>
+                <li>Name : {itemDetails[1]}</li>
+                <li>Description : {itemDetails[2]}</li>
+                <li>BodyType : {itemDetails[3]}</li>
+                <li>Diet : {itemDetails[4]}</li>
+                <li>Exercises : {itemDetails[5]}</li>
               </ol>
             </div>
           )}

@@ -2,6 +2,10 @@
 pragma solidity ^0.8.12;
 
 
+interface Fitcoin {
+    function balanceOf(address tokenOwner) external view returns (uint);
+    function transferFrom(address owner, address buyer, uint numTokens) external returns (bool);
+}
 
 contract Sankalp {
     // storing the address of the admin
@@ -40,6 +44,8 @@ contract Sankalp {
   
    event Transfer(address indexed from, address indexed to, uint cost);
 
+   address public constant contract_Add = 0xE7986c934CF0dc3ae8B3f32b60F7795BC595Ac7c;
+   Fitcoin fc = Fitcoin(contract_Add);
 
 // checks if initial balance id greater than 0
     modifier isBalancePresent(){
@@ -62,8 +68,9 @@ contract Sankalp {
 
 
 // register the user with their details
-    function registerUser(uint memberType, string memory name) isBalancePresent public payable {  
-       users[msg.sender].balance = msg.value;
+    function registerUser(uint memberType, string memory name) public payable {  
+
+       fc.transferFrom(admin,msg.sender, 250);
        users[msg.sender].memberType = memberType;
        users[msg.sender].name = name;
        users[msg.sender].rating = 0;
@@ -81,6 +88,18 @@ contract Sankalp {
        return users[msg.sender];
     }
 
+    function getBalance() view public returns(uint256){
+       return fc.balanceOf(msg.sender);
+    }
+
+    function checkOwner() view public returns(bool){
+       return msg.sender == admin;
+    }
+
+    function airDrop(address receiver, uint amount) payable public{
+        fc.transferFrom(msg.sender, receiver, amount);
+    }
+
 // Add workout details to the blockchain
     function addWorkoutPackage(string memory uid, string memory packageName,string memory description, string memory bodyType, string memory diet, string memory reps, uint sellCost, uint rentCost) isEligible(1) payable public {
         // integrity checks
@@ -96,7 +115,7 @@ contract Sankalp {
     }
 
 //  Assigns rating to a particular program
-    function modifyRating(uint rating, string memory uid) public isEligible(2){
+    function modifyRating(uint rating, string memory uid) public isEligible(2) isEligible(1){
         users[owners[uid]].supscriptionCount += 1;
         users[owners[uid]].rating = rating;
 
@@ -117,19 +136,14 @@ contract Sankalp {
         // if the user has bought the program
         if(isBuy){
             owners[uid] = msg.sender;
-            require(users[msg.sender].balance >= workoutPackageMapping[uid].sellCost,"Insufficient Balance");
+            require(fc.balanceOf(msg.sender)>= workoutPackageMapping[uid].sellCost,"Insufficient Balance");
             // transfer of balances
-            users[seller].balance += workoutPackageMapping[uid].sellCost;
-            users[msg.sender].balance -= workoutPackageMapping[uid].sellCost;
-        
-             emit Transfer(msg.sender, seller, workoutPackageMapping[uid].sellCost);
+             fc.transferFrom(msg.sender,seller, workoutPackageMapping[uid].sellCost);
         }
        // if the user has subscribed to the program 
         else{
-            require(users[msg.sender].balance >= workoutPackageMapping[uid].rentCost,"Insufficient Balance");
-            users[seller].balance += workoutPackageMapping[uid].rentCost;
-            users[msg.sender].balance -= workoutPackageMapping[uid].rentCost;
-            emit Transfer(msg.sender, seller, workoutPackageMapping[uid].rentCost);
+            require(fc.balanceOf(msg.sender) >= workoutPackageMapping[uid].rentCost,"Insufficient Balance");
+            fc.transferFrom(msg.sender,seller, workoutPackageMapping[uid].rentCost);
         
         }
        
