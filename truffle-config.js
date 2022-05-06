@@ -15,7 +15,7 @@ module.exports = {
       provider: () =>
         new HDWalletProvider(
           "series hundred chest slam citizen obscure giant bike jazz year economy category",
-          "https://ropsten.infura.io/v3/583c390b136946bb8179a407e7eaad6e"
+          "https://ropsten.infura.io/v3/15e76def280f40049bc4c868095cf8e2"
         ),
       network_id: 3,
     },

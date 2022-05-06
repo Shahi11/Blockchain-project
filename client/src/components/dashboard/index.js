@@ -14,7 +14,7 @@ const Dashboard = ({ contract, accounts, web3 }) => {
   const [itemDetails, setItemDetails] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
   const [isOwner, setIsOwner] = useState(null);
-
+  const [allowance, setAllowance] = useState(null);
   const getListofWorkout = async () => {
     const listWorkout = await contract.methods.getAllWorkouts().call({
       from: accounts[0],
@@ -73,6 +73,13 @@ const Dashboard = ({ contract, accounts, web3 }) => {
     console.log("balance" + response);
   };
 
+  const getAllowance = async () => {
+    const response = await contract.methods.checkAllowance().call({
+      from: accounts[0],
+    });
+    setAllowance(response);
+  };
+
   const checkAdmin = async () => {
     const response = await contract.methods.checkOwner().call({
       from: accounts[0],
@@ -107,6 +114,17 @@ const Dashboard = ({ contract, accounts, web3 }) => {
     window.location.href = "/dashboard";
   };
 
+  const onAllowance = async () => {
+    const amount = parseInt(document.querySelector("#allowance").value);
+
+    const response = await contract.methods.approval(amount).send({
+      from: accounts[0],
+    });
+    console.log(response);
+
+    window.location.href = "/dashboard";
+  };
+
   useEffect(() => {
     console.log("CONTRACT NOW => ", contract);
     if (contract) {
@@ -114,6 +132,7 @@ const Dashboard = ({ contract, accounts, web3 }) => {
       getListofWorkout();
       getBalance();
       checkAdmin();
+      getAllowance();
     }
   }, [contract]);
 
@@ -181,6 +200,18 @@ const Dashboard = ({ contract, accounts, web3 }) => {
             </button>
           </form>
         )}
+        <form>
+          <h4>Allowance : {allowance}</h4>
+          <input
+            id="allowance"
+            className="textInput"
+            type="number"
+            placeholder="Enter Allowed Amount"
+          />
+          <button type="button" onClick={onAllowance}>
+            Approve
+          </button>
+        </form>
       </div>
       <br />
       <h1 className="mplace-header">MarketPlace</h1>
@@ -244,7 +275,13 @@ const Dashboard = ({ contract, accounts, web3 }) => {
         className={`modal ${showModal ? "modal-visible" : "modal-hidden"} `}
       >
         <div className="modal-content">
-          <span className="close" onClick={() => setShowModal(false)}>
+          <span
+            className="close"
+            onClick={() => {
+              setShowModal(false);
+              window.location.href = "/dashboard";
+            }}
+          >
             &times;
           </span>
           <p>Thank You for the Purchase!</p>

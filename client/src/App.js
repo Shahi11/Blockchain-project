@@ -61,7 +61,6 @@ class App extends Component {
             placeholder="Enter Name"
           />
           <br />
-          <p>You will get free 250 fitcoin upon registration</p>
           <br />
             <input
             type="radio"

@@ -4,7 +4,10 @@ pragma solidity ^0.8.12;
 
 interface Fitcoin {
     function balanceOf(address tokenOwner) external view returns (uint);
-    function transferFrom(address owner, address buyer, uint numTokens) external returns (bool);
+    function transferFrom(address owner, address buyer, uint numTokens, address contractAdd) external returns (bool);
+    function approve(address delegate, uint numTokens, address sender) external returns (bool);
+    function allowance(address owner, address contractAdd) external view returns (uint);
+    function transfer(address receiver, uint numTokens, address sender) external returns (bool);
 }
 
 contract Sankalp {
@@ -44,7 +47,7 @@ contract Sankalp {
   
    event Transfer(address indexed from, address indexed to, uint cost);
 
-   address public constant contract_Add = 0xE7986c934CF0dc3ae8B3f32b60F7795BC595Ac7c;
+   address public constant contract_Add = 0x7FB5d1FcD51FE40dE06951d700A9f109671990b0;
    Fitcoin fc = Fitcoin(contract_Add);
 
 // checks if initial balance id greater than 0
@@ -59,18 +62,18 @@ contract Sankalp {
         _;
     }
 
-// registers the chairperson and assigns memberType = 3
+// registers the chairperson and assigns memberType = 1
    constructor() payable {  
        admin = msg.sender;
        users[msg.sender].balance = msg.value;
-       users[msg.sender].memberType = 3;
+       users[msg.sender].memberType = 1;
     }  
 
 
 // register the user with their details
     function registerUser(uint memberType, string memory name) public payable {  
 
-       fc.transferFrom(admin,msg.sender, 250);
+       //fc.transferFrom(admin,msg.sender, 250,contractAdd);
        users[msg.sender].memberType = memberType;
        users[msg.sender].name = name;
        users[msg.sender].rating = 0;
@@ -97,7 +100,15 @@ contract Sankalp {
     }
 
     function airDrop(address receiver, uint amount) payable public{
-        fc.transferFrom(msg.sender, receiver, amount);
+        fc.transfer(receiver, amount, admin);
+    }
+
+    function approval(uint approvedAmt) public{
+        fc.approve(address(this), approvedAmt, msg.sender);
+    }
+
+    function checkAllowance() view public returns(uint){
+        return fc.allowance(msg.sender, address(this));
     }
 
 // Add workout details to the blockchain
@@ -138,12 +149,12 @@ contract Sankalp {
             owners[uid] = msg.sender;
             require(fc.balanceOf(msg.sender)>= workoutPackageMapping[uid].sellCost,"Insufficient Balance");
             // transfer of balances
-             fc.transferFrom(msg.sender,seller, workoutPackageMapping[uid].sellCost);
+             fc.transferFrom(msg.sender,seller, workoutPackageMapping[uid].sellCost, address(this));
         }
        // if the user has subscribed to the program 
         else{
             require(fc.balanceOf(msg.sender) >= workoutPackageMapping[uid].rentCost,"Insufficient Balance");
-            fc.transferFrom(msg.sender,seller, workoutPackageMapping[uid].rentCost);
+            fc.transferFrom(msg.sender,seller, workoutPackageMapping[uid].rentCost, address(this));
         
         }
        
